@@ -1,21 +1,25 @@
+import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, Alert } from 'react-native';
+import { View, Text, TextInput, Button, StyleSheet, Alert, TouchableOpacity } from 'react-native';
+import { ButtonStyles, ButtonText, Inputstyles, TextStyles } from '../../../theme/Theme';
 
 const SigninScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+const navigation = useNavigation()
   const handleSignIn = () => {
     // Implement sign in logic here
     Alert.alert('Sign In', `Signed in successfully!\nEmail: ${email}`);
+    navigation.navigate('Home')
+    
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Sign In</Text>
+      <Text style={TextStyles.MainHeading}>Sign In</Text>
       
       <TextInput
-        style={styles.input}
+        style={Inputstyles.input}
         placeholder="Email"
         keyboardType="email-address"
         value={email}
@@ -23,14 +27,16 @@ const SigninScreen = () => {
       />
       
       <TextInput
-        style={styles.input}
+        style={Inputstyles.input}
         placeholder="Password"
         secureTextEntry={true}
         value={password}
         onChangeText={setPassword}
       />
       
-      <Button title="Sign In" onPress={handleSignIn} />
+      <TouchableOpacity style={[styles.Buttons, ButtonStyles.ButtonColor]}> 
+        <Text style={ButtonStyles.ButtonText}> Sign In </Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -42,18 +48,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: 20,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  input: {
+  Buttons:
+  {
     width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
     height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
+    borderRadius: 10,
+    marginTop: '5%',
+    alignSelf:'center'
+
   },
 });
 
