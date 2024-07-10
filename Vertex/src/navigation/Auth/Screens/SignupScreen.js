@@ -1,105 +1,91 @@
 import { useNavigation } from '@react-navigation/native';
 import React, { useState } from 'react';
-import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
-import { ButtonStyles, Inputstyles, TextStyles } from '../../../theme/Theme';
-
+import { Box, Button, Center, Input, Text, VStack, Select, HStack } from 'native-base';
+import { storeSignupData } from '../../../Context/Authactions/Auth.action';
 const SignupScreen = () => {
   const [companyName, setCompanyName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [managerName, setManagerName] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [userName, setUserName] = useState('');
+  const [Role , setRole] = useState('')
+  const [errorMessage, setErrorMessage] = useState('');
   const navigation = useNavigation();
 
   const handleSignup = () => {
-    // Implement signup logic here
-    console.log('Company Name:', companyName);
-    console.log('Email:', email);
-    console.log('Password:', password);
-    console.log('Manager Name:', managerName);
-    navigation.navigate('Home');
-  };
+    if (password !== confirmPassword) {
+      setErrorMessage('Password does not match the confirm password');
+      return;
+    }
 
-  const navigateToSignin = () => {
+    // Store signup data in AsyncStorage
+    try {
+      storeSignupData(companyName, email, password, userName, Role);
+    } catch (error) {
+      console.error('Error storing signup data:', error);
+      setErrorMessage('Error storing signup data');
+      return;
+    }
+
+    // Clear the error message and navigate to Home if signup is successful
+    setErrorMessage('');
     navigation.navigate('SigninScreen');
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={TextStyles.MainHeading}>Sign Up</Text>
-      <TextInput
-        style={Inputstyles.input}
-        placeholder="Company Name"
-        value={companyName}
-        onChangeText={setCompanyName}
-      />
-      <TextInput
-        style={Inputstyles.input}
-        placeholder="Email"
-        keyboardType="email-address"
-        value={email}
-        onChangeText={setEmail}
-      />
-      <TextInput
-        style={Inputstyles.input}
-        placeholder="Password"
-        secureTextEntry={true}
-        value={password}
-        onChangeText={setPassword}
-      />
-      <TextInput
-        style={Inputstyles.input}
-        placeholder="Manager Name"
-        value={managerName}
-        onChangeText={setManagerName}
-      />
-      <TouchableOpacity style={[ButtonStyles.ButtonColor ,styles.Buttons]} onPress={handleSignup}> 
-        <Text style={ButtonStyles.ButtonText}> Sign Up </Text>
-
-      </TouchableOpacity>
-      <View style={styles.linkContainer}>
-        <Text style={styles.text}>Already have an account? </Text>
-        <TouchableOpacity onPress={navigateToSignin}>
-          <Text style={styles.linkText}>Sign In</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    <Center flex={1} px="3">
+      <Box w="100%">
+        <VStack space={5} alignItems={'center'}>
+          <Text fontSize="2xl" bold>Sign Up</Text>
+          <Input
+            placeholder="Company Name"
+            value={companyName}
+            onChangeText={setCompanyName}
+          />
+          <Input
+            placeholder="Email"
+            keyboardType="email-address"
+            value={email}
+            onChangeText={setEmail}
+          />
+          <Input
+            placeholder="Password"
+            secureTextEntry={true}
+            value={password}
+            onChangeText={setPassword}
+          />
+          <Input
+            placeholder="Confirm Password"
+            secureTextEntry={true}
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+          />
+          <Input
+            placeholder="User Name"
+            secureTextEntry={false}
+            value={userName}
+            onChangeText={setUserName}
+          />
+          
+          <Select
+            placeholder="Select Role"
+            selectedValue={Role}
+            minWidth={200}
+            onValueChange={(itemValue) => setRole(itemValue)}
+          >
+            <Select.Item label="Project Manager" value="Project Manager" />
+            <Select.Item label="Project Member" value="Project Member" />
+          </Select>
+          {errorMessage ? (
+            <Text color="red.500">{errorMessage}</Text>
+          ) : null}
+          <Button onPress={handleSignup}>
+            Sign Up
+          </Button>
+        </VStack>
+      </Box>
+    </Center>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 20,
-    backgroundColor: '#fff',
-  },
-  signupText: {
-    fontWeight: 'bold',
-    color: 'white',
-  },
-  linkContainer: {
-    flexDirection: 'row',
-    marginTop: 20,
-  },
-  text: {
-    color: 'black',
-  },
-  linkText: {
-    color: '#00b4d8',
-    textDecorationLine: 'underline',
-  },
-  Buttons:
-  {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 40,
-    borderRadius: 10,
-    marginTop: '5%',
-    alignSelf:'center'
-
-  },
-});
 
 export default SignupScreen;

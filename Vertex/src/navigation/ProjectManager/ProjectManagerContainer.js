@@ -6,6 +6,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import HomeStack from './Stacks/HomeStack';
 import ChatStack from './Stacks/ChatStack';
 import ProjectStack from './Stacks/ProjectStack';
+import MoreStack from './Stacks/MoreStack';
 
 const Tab = createBottomTabNavigator();
 
@@ -26,10 +27,8 @@ const ProjectManagerContainer = () => {
                         iconName = focused ? 'home' : 'home-outline';
                     } else if (rn === 'Chat') {
                         iconName = focused ? 'chatbubbles' : 'chatbubbles-outline';
-                    } else if (rn === 'Add Project') {
-                        iconName = focused ? 'add-circle' : 'add-circle-outline';
-                    } else if (rn === 'Settings') {
-                        iconName = focused ? 'settings' : 'settings-outline';
+                    }  else if (rn === 'More') {
+                        iconName = focused ? 'ellipsis-horizontal' : 'ellipsis-horizontal-outline';
                     }
 
                     return <Ionicons name={iconName} color={color} size={focused ? size + 5 : size} />;
@@ -37,8 +36,8 @@ const ProjectManagerContainer = () => {
             })}
         >
             <Tab.Screen name="Home" component={HomeStack} />
-            <Tab.Screen name="Add Project" component={ProjectStack} />
             <Tab.Screen name="Chat" component={ChatStack} />
+            <Tab.Screen name="More" component={MoreStack} />
         </Tab.Navigator>
     );
 };

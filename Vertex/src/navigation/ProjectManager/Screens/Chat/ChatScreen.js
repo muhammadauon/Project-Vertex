@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
-import { ButtonStyles } from '../../../../theme/Theme';
+import { FlatList } from 'react-native';
+import { Box, Text, Input, Button, VStack, HStack } from 'native-base';
 
 const ChatScreen = () => {
   const [message, setMessage] = useState('');
@@ -14,80 +14,43 @@ const ChatScreen = () => {
   };
 
   const renderItem = ({ item }) => (
-    <View style={styles.messageContainer}>
-      <Text style={styles.messageText}>{item.text}</Text>
-    </View>
+    <Box bg="primary.500" borderRadius="md" p={3} my={1} alignSelf="flex-start">
+      <Text color="white">{item.text}</Text>
+    </Box>
   );
 
   return (
-    <View style={styles.container}>
+    <VStack flex={1} bg="#fff" px={3} pb={3}>
       <FlatList
         data={messages}
         renderItem={renderItem}
-        keyExtractor={item => item.id}
-        contentContainerStyle={styles.messagesList}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={{ flexGrow: 1, justifyContent: 'flex-end' }}
       />
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
+      <HStack alignItems="center" px={2} py={1} space={2}>
+        <Input
+          flex={1}
           placeholder="Type a message"
           value={message}
           onChangeText={setMessage}
+          borderRadius="md"
+          px={3}
+          h={10}
+          _focus={{ borderColor: 'primary.500' }}
         />
-        <TouchableOpacity style={[styles.sendButton ,ButtonStyles.ButtonColor]} onPress={handleSend}>
-          <Text style={ButtonStyles.ButtonText}>Send</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+        <Button
+          borderRadius="md"
+          px={4}
+          py={2}
+          bg="primary.500"
+          _text={{ color: 'white', fontWeight: 'bold' }}
+          onPress={handleSend}
+        >
+          Send
+        </Button>
+      </HStack>
+    </VStack>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    paddingHorizontal: 10,
-    paddingBottom: 10,
-  },
-  messagesList: {
-    flexGrow: 1,
-    justifyContent: 'flex-end',
-  },
-  messageContainer: {
-    backgroundColor: '#00b4d8',
-    borderRadius: 10,
-    padding: 10,
-    marginVertical: 5,
-    alignSelf: 'flex-start',
-  },
-  messageText: {
-    color: 'white',
-  },
-  inputContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-  },
-  input: {
-    flex: 1,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 20,
-    paddingHorizontal: 10,
-    height: 40,
-  },
-  sendButton: {
-    backgroundColor: '#00b4d8',
-    borderRadius: 20,
-    paddingHorizontal: 15,
-    paddingVertical: 10,
-    marginLeft: 10,
-  },
-  sendButtonText: {
-    color: 'white',
-    fontWeight: 'bold',
-  },
-});
 
 export default ChatScreen;

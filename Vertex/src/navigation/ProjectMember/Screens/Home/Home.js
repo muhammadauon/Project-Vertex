@@ -1,8 +1,8 @@
 import React from 'react';
-import { View, Text, Button, FlatList, StyleSheet } from 'react-native';
+import { StyleSheet, FlatList } from 'react-native';
+import { Box, Text, VStack, Button } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
-import ProjectsCard from '../../../../components/cards/ProjectsCard';
-import { TextStyles } from '../../../../theme/Theme';
+import ProjectsCardMember from '../../../../components/cards/ProjectrCardMember';
 
 const Home = () => {
   const navigation = useNavigation();
@@ -14,25 +14,20 @@ const Home = () => {
     // Add more projects as needed
   ];
 
-  const handleViewDetails = (projectId) => {
-    // Navigate to project details screen
-    console.log('View details for project:', projectId);
-  };
-
   const renderItem = ({ item }) => (
-    <ProjectsCard project={item} onViewDetails={handleViewDetails} />
+    <ProjectsCardMember project={item}  />
   );
 
   return (
-    <View style={styles.container}>
-      <Text style={TextStyles.MainHeading}>Projects</Text>
+    <VStack style={styles.container}>
+      <Text fontSize="2xl" fontWeight="bold" mb={5}>Projects</Text>
       <FlatList
         data={projects}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         style={styles.flatList}
       />
-    </View>
+    </VStack>
   );
 };
 
@@ -42,12 +37,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     paddingHorizontal: 20,
     paddingVertical: 10,
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    color: '#00b4d8',
   },
   flatList: {
     flexGrow: 1,

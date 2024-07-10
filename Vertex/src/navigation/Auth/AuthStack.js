@@ -18,14 +18,14 @@ const AuthStack = () => {
         options={{ title: 'Welcome Screen' }}
       />
       <Stack.Screen
-        name="SignupScreen"
-        component={SignupScreen}
-        options={{ title: 'Sign Up' }}
-      />
-      <Stack.Screen
         name="SigninScreen"
         component={SigninScreen}
         options={{ title: 'Sign In' }}
+      />
+      <Stack.Screen
+        name="SignupScreen"
+        component={SignupScreen}
+        options={{ title: 'Sign Up' }}
       />
       <Stack.Screen
         name="ForgetPassword"

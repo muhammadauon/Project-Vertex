@@ -1,39 +1,50 @@
-import React from 'react';
-import { View, Text, Button, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
+import React, { useEffect } from 'react';
+import { StyleSheet, FlatList } from 'react-native';
+import { Box, Text, VStack, Button } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
+import { connect } from 'react-redux';
+import { loadProjects, deleteProject } from '../../../../redux/actions/ManagerActions';
 import ProjectsCard from '../../../../components/cards/ProjectsCard';
-import { ButtonStyles, TextStyles } from '../../../../theme/Theme';
 
-const Home = () => {
+const Home = ({ projects, loadProjects, deleteProject }) => {
   const navigation = useNavigation();
 
-  // Sample project data
-  const projects = [
-    { id: '1', name: 'Project Alpha', description: 'Description for Project Alpha' },
-    { id: '2', name: 'Project Beta', description: 'Description for Project Beta' },
-    // Add more projects as needed
-  ];
+  useEffect(() => {
+    loadProjects();
+  }, [loadProjects]);
 
-  const handleViewDetails = (projectId) => {
-    // Navigate to project details screen
-    console.log('View details for project:', projectId);
+
+  const handleAddProject = () => {
+    navigation.navigate('Add Project'); // Navigate to AddProject screen
+  };
+
+  const handleUpdateProject = (project) => {
+    navigation.navigate('Add Project', { project }); // Pass the project to the AddProjects screen for updating
+  };
+
+  const handleDeleteProject = (projectId) => {
+    deleteProject(projectId);
   };
 
   const renderItem = ({ item }) => (
-    <ProjectsCard project={item} onViewDetails={handleViewDetails} />
+    <ProjectsCard
+      project={item}
+      onDelete={handleDeleteProject}
+      onUpdate={handleUpdateProject} // Pass the update handler function
+    />
   );
 
-  
   return (
-    <View style={styles.container}>
-      <Text style={TextStyles.MainHeading}>Projects</Text>
+    <VStack style={styles.container}>
+      <Text fontSize="2xl" fontWeight="bold" mb={5}>Projects</Text>
       <FlatList
         data={projects}
         keyExtractor={(item) => item.id}
         renderItem={renderItem}
         style={styles.flatList}
       />
-    </View>
+      <Button onPress={handleAddProject}>Add Project</Button>
+    </VStack>
   );
 };
 
@@ -47,15 +58,15 @@ const styles = StyleSheet.create({
   flatList: {
     flexGrow: 1,
   },
-  Buttons: {
-    width: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 40,
-    borderRadius: 10,
-    marginTop: '5%',
-    alignSelf: 'center',
-  },
 });
 
-export default Home;
+const mapStateToProps = (state) => ({
+  projects: state.projectManager.projects,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  loadProjects: () => dispatch(loadProjects()),
+  deleteProject: (projectId) => dispatch(deleteProject(projectId)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
