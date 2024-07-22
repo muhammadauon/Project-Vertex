@@ -11,7 +11,7 @@ const More = () => {
         <Heading mb="5">More Options</Heading>
         <VStack space={4} w="90%" maxW="300px">
           <Button
-            onPress={() => navigation.navigate('ProjectManagement')}
+            onPress={() => navigation.navigate('AddProjects')}
             bg="primary.500"
             _text={{ fontWeight: 'bold' }}
           >

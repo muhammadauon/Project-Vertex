@@ -1,21 +1,34 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { StyleSheet, FlatList } from 'react-native';
 import { Box, Text, VStack, Button } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
-import ProjectsCardMember from '../../../../components/cards/ProjectrCardMember';
+import { connect } from 'react-redux';
+import { loadProjects, deleteProject } from '../../../../redux/actions/ManagerActions';
+import ProjectsCard from '../../../../components/cards/ProjectsCard';
+import ProjectrCardMember from '../../../../components/cards/ProjectrCardMember';
 
-const Home = () => {
+const Home = ({ projects, loadProjects, deleteProject }) => {
   const navigation = useNavigation();
 
-  // Sample project data
-  const projects = [
-    { id: '1', name: 'Project Alpha', description: 'Description for Project Alpha' },
-    { id: '2', name: 'Project Beta', description: 'Description for Project Beta' },
-    // Add more projects as needed
-  ];
+  useEffect(() => {
+    loadProjects();
+  }, [loadProjects]);
+
+
+  const handleUpdateProject = (project) => {
+    navigation.navigate('Add Project', { project }); // Pass the project to the AddProjects screen for updating
+  };
+
+  const handleDeleteProject = (projectId) => {
+    deleteProject(projectId);
+  };
 
   const renderItem = ({ item }) => (
-    <ProjectsCardMember project={item}  />
+    <ProjectrCardMember
+      project={item}
+      onDelete={handleDeleteProject}
+      onUpdate={handleUpdateProject} // Pass the update handler function
+    />
   );
 
   return (
@@ -43,4 +56,13 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Home;
+const mapStateToProps = (state) => ({
+  projects: state.projectManager.projects,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  loadProjects: () => dispatch(loadProjects()),
+  deleteProject: (projectId) => dispatch(deleteProject(projectId)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);

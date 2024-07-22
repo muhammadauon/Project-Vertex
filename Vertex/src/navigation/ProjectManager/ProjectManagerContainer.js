@@ -2,10 +2,8 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 
-// Import your stacks
 import HomeStack from './Stacks/HomeStack';
 import ChatStack from './Stacks/ChatStack';
-import ProjectStack from './Stacks/ProjectStack';
 import MoreStack from './Stacks/MoreStack';
 
 const Tab = createBottomTabNavigator();
