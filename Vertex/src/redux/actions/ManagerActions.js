@@ -3,14 +3,20 @@ import { ADD_PROJECT, SET_PROJECTS, DELETE_PROJECT, UPDATE_PROJECT, ADD_TEAM, SE
 
 export const addProject = (project) => async (dispatch) => {
   try {
-    const currentProjects = await AsyncStorage.getItem('projects');
-    const projects = currentProjects ? JSON.parse(currentProjects) : [];
+    const response = await fetch('http://172.31.224.1:7281/api/Project/AddProject', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(project),
+    });
 
-    projects.push(project);
-
-    await AsyncStorage.setItem('projects', JSON.stringify(projects));
-
-    dispatch({ type: ADD_PROJECT, payload: project });
+    if (response.ok) {
+      dispatch({ type: ADD_PROJECT, payload: project });
+    } else {
+      const errorData = await response.json();
+      console.error('Failed to add project', errorData);
+    }
   } catch (error) {
     console.error('Failed to add project', error);
   }
@@ -18,8 +24,19 @@ export const addProject = (project) => async (dispatch) => {
 
 export const loadProjects = () => async (dispatch) => {
   try {
-    const projects = await AsyncStorage.getItem('projects');
-    dispatch({ type: SET_PROJECTS, payload: projects ? JSON.parse(projects) : [] });
+    const response = await fetch('http://172.31.224.1:7281/api/Project/GetProjects', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (response.ok) {
+      const projects = await response.json();
+      dispatch({ type: SET_PROJECTS, payload: projects });
+    } else {
+      console.error('Failed to load projects', await response.text());
+    }
   } catch (error) {
     console.error('Failed to load projects', error);
   }

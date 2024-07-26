@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { StyleSheet, FlatList } from 'react-native';
-import { Box, Text, VStack, Button } from 'native-base';
+import { Text, VStack, Button } from 'native-base';
 import { useNavigation } from '@react-navigation/native';
 import { connect } from 'react-redux';
 import { loadProjects, deleteProject } from '../../../../redux/actions/ManagerActions';
@@ -12,7 +12,6 @@ const Home = ({ projects, loadProjects, deleteProject }) => {
   useEffect(() => {
     loadProjects();
   }, [loadProjects]);
-
 
   const handleAddProject = () => {
     navigation.navigate('Add Project'); // Navigate to AddProject screen
@@ -39,9 +38,10 @@ const Home = ({ projects, loadProjects, deleteProject }) => {
       <Text fontSize="2xl" fontWeight="bold" mb={5}>Projects</Text>
       <FlatList
         data={projects}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item) => item.projectId}
         renderItem={renderItem}
         style={styles.flatList}
+        ListEmptyComponent={<Text>No projects available.</Text>}
       />
       <Button onPress={handleAddProject}>Add Project</Button>
     </VStack>

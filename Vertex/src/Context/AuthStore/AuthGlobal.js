@@ -1,16 +1,3 @@
-import React, { useContext } from 'react';
-import { AuthContext } from './Auth';
+import React from "react";
 
-const AuthGlobal = () => {
-    const { isAuthenticated, user, token, setCurrentUser, handleLogout } = useContext(AuthContext);
-
-    return {
-        isAuthenticated,
-        user,
-        token,
-        setCurrentUser,
-        handleLogout
-    };
-};
-
-export default AuthGlobal;
+export default React.createContext();

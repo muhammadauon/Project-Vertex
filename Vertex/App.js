@@ -6,46 +6,38 @@ import AuthStack from './src/navigation/Auth/AuthStack';
 import ProjectManagerContainer from './src/navigation/ProjectManager/ProjectManagerContainer';
 import ProjectMemberContainer from './src/navigation/ProjectMember/ProjectMemberContainer';
 import customTheme from './src/theme/Theme';
-import { AuthProvider, AuthContext } from './src/Context/AuthStore/Auth';
-import store from './src/redux/store';
+import Auth from './src/Context/AuthStore/Auth';
+import AuthGlobal from './src/Context/AuthStore/AuthGlobal';
+import Store from './src/redux/store';
 import { Provider } from 'react-redux';
 
-const AppContent = () => {
-  const { isAuthenticated, user } = useContext(AuthContext);
-  const [role, setRole] = useState(null);
+const Container = () => {
+  const context = useContext(AuthGlobal)
+  console.log(context.stateUser);
 
-  useEffect(() => {
-    if (isAuthenticated && user && user.role) {
-      setRole(user.role);
-    } else {
-      setRole(null);
-    }
-  }, [isAuthenticated, user]);
-
-  return (
-    <NavigationContainer>
-      {isAuthenticated ? (
-        role === 'Project Manager' ? (
-          <ProjectManagerContainer />
-        ) : (
-          <ProjectMemberContainer />
-        )
-      ) : (
-        <AuthStack />
-      )}
-    </NavigationContainer>
+  return context.stateUser.isAuthenticated ? (
+    context.stateUser.user.RoleId == 1 ? (
+      <ProjectManagerContainer />
+    ) : (
+      <ProjectMemberContainer />
+    )
+  ) : (
+    <AuthStack />
   );
+
 };
 
 const App = () => {
   return (
-    <Provider store={store}>
-      <AuthProvider>
+    <Auth>
+      <NavigationContainer>
         <NativeBaseProvider theme={customTheme}>
-          <AppContent />
+          <Provider store={Store} >
+          <Container />
+          </Provider >
         </NativeBaseProvider>
-      </AuthProvider>
-    </Provider>
+      </NavigationContainer>
+    </Auth>
   );
 };
 

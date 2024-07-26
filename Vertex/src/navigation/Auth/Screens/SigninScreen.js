@@ -2,16 +2,19 @@ import { useNavigation } from '@react-navigation/native';
 import React, { useState, useContext } from 'react';
 import { ActivityIndicator, Platform } from 'react-native';
 import { Box, Button, Center, HStack, Input, Link, Text, VStack, useToast } from 'native-base';
-import { AuthContext } from '../../../Context/AuthStore/Auth';
 import { loginUser } from '../../../Context/Authactions/Auth.action';
+import AuthGlobal from '../../../Context/AuthStore/AuthGlobal';
 
 const SigninScreen = () => {
+  // Hooks
+  const toast = useToast();
+  const context = useContext(AuthGlobal);
+  const navigation = useNavigation();
+
+  // states
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigation = useNavigation();
-  const toast = useToast();
-  const { dispatch } = useContext(AuthContext);
 
   const validateFields = () => {
     if (!email || !password) {
@@ -24,11 +27,12 @@ const SigninScreen = () => {
     return true;
   };
 
+  
   const onSubmit = async () => {
     if (validateFields()) {
       setLoading(true);
       try {
-        await loginUser(email, password, dispatch);
+        await loginUser(email, password, context.dispatch);
         toast.show({
           title: 'Success',
           description: 'Signed in successfully!',
@@ -55,13 +59,13 @@ const SigninScreen = () => {
             placeholder="Email"
             keyboardType="email-address"
             value={email}
-            onChangeText={setEmail}
+            onChangeText={text=> setEmail(text)}
           />
           <Input
             placeholder="Password"
             secureTextEntry={true}
             value={password}
-            onChangeText={setPassword}
+            onChangeText={text=>setPassword(text)}
           />
           {loading ? (
             <ActivityIndicator size="large" color="#0000ff" />

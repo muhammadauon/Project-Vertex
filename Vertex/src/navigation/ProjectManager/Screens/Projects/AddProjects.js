@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { VStack, Box, Input, Button, Text } from 'native-base';
+import { VStack, Input, Button, Text } from 'native-base';
 import { connect } from 'react-redux';
 import { addProject, updateProject } from '../../../../redux/actions/ManagerActions';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -8,7 +8,6 @@ const AddProjects = ({ addProject, updateProject }) => {
   const [projectName, setProjectName] = useState('');
   const [description, setDescription] = useState('');
   const [isUpdate, setIsUpdate] = useState(false);
-  const [projectId, setProjectId] = useState(null);
 
   const navigation = useNavigation();
   const route = useRoute();
@@ -16,18 +15,16 @@ const AddProjects = ({ addProject, updateProject }) => {
   useEffect(() => {
     if (route.params?.project) {
       const { project } = route.params;
-      setProjectName(project.name);
-      setDescription(project.description);
-      setProjectId(project.id);
+      setProjectName(project.projectName);
+      setDescription(project.projectDescription);
       setIsUpdate(true);
     }
   }, [route.params]);
 
   const handleAddOrUpdateProject = () => {
     const project = {
-      id: projectId || Date.now().toString(),
-      name: projectName,
-      description,
+      projectName,
+      projectDescription: description,
     };
 
     if (isUpdate) {
@@ -40,7 +37,6 @@ const AddProjects = ({ addProject, updateProject }) => {
     setProjectName('');
     setDescription('');
     setIsUpdate(false);
-    setProjectId(null);
     navigation.goBack();
   };
 
